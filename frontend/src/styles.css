@@ -1,0 +1,22 @@
+:root { font-family: Inter, system-ui, sans-serif; color: #172033; background: #f5f6fb; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, textarea { font: inherit; }
+.app-shell { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 3fr) minmax(360px, 2fr); background: white; }
+.complaint-panel { padding: 44px 48px; overflow-y: auto; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #e8eaf0; padding-bottom: 24px; margin-bottom: 34px; }
+h1 { font-size: 30px; margin: 0 0 8px; } h2 { font-size: 16px; margin: 30px 0 18px; color: #445067; text-transform: uppercase; letter-spacing: .02em; } p { margin: 0; color: #718096; }
+.status { border-radius: 99px; padding: 9px 14px; font-weight: 600; font-size: 14px; background: #fff5cc; color: #8a6110; }
+.status-ready-to-commit, .status-committed { background: #dcfce7; color: #16713b; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 30px; }
+.field { display: flex; flex-direction: column; gap: 8px; color: #334155; font-weight: 600; }
+.field-wide { grid-column: span 2; }
+input, textarea { width: 100%; border: 1px solid #d5dae5; border-radius: 8px; padding: 13px 14px; color: #172033; background: #fff; resize: vertical; font-weight: 400; }
+input:focus, textarea:focus { outline: 2px solid #c4b5fd; border-color: #7c3aed; }
+.risk-card { margin-top: 28px; padding: 6px 28px 28px; background: #f4f2ff; border: 1px solid #ddd6fe; border-radius: 12px; }.risk-card h2 { color: #4c3aa5; text-transform: none; font-size: 19px; }
+.commit-button, .composer button { border: 0; background: #5137e8; color: white; border-radius: 8px; padding: 15px 20px; font-size: 16px; font-weight: 700; cursor: pointer; }.commit-button { width: 100%; margin-top: 32px; }.commit-button:disabled { cursor: not-allowed; background: #c6c8d3; }
+.copilot-panel { display: flex; flex-direction: column; background: #fafaff; border-left: 1px solid #e8eaf0; }.copilot-panel > header { padding: 38px 34px 20px; border-bottom: 1px solid #e8eaf0; }.copilot-panel > header h2 { text-transform: none; color: #1c2440; font-size: 24px; margin: 0 0 8px; }
+.messages { flex: 1; display: flex; flex-direction: column; gap: 18px; padding: 28px 34px; overflow-y: auto; }.message { max-width: 88%; padding: 18px; border-radius: 10px; line-height: 1.5; }.message.assistant { background: white; border: 1px solid #e2e8f0; align-self: flex-start; }.message.user { background: #5137e8; color: white; align-self: flex-end; }
+.composer { padding: 22px 34px; border-top: 1px solid #e8eaf0; display: grid; gap: 12px; background: white; }.upload-control { color: #5137e8; font-size: 14px; font-weight: 600; cursor: pointer; }.upload-control input { display: none; }.composer-actions { display: flex; gap: 10px; justify-content: flex-end; }.secondary-button { background: #ede9fe !important; color: #5137e8 !important; }.copilot-panel small { text-align: center; padding: 0 0 22px; color: #8a94a6; }
+@media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; }.copilot-panel { min-height: 520px; border-left: 0; border-top: 1px solid #e8eaf0; }.complaint-panel { padding: 28px 22px; } }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; }.field-wide { grid-column: span 1; }.page-header { gap: 16px; flex-direction: column; } }

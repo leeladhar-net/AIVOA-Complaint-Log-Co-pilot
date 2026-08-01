@@ -1,0 +1,19 @@
+# Frontend dependencies and builds
+frontend/node_modules/
+frontend/dist/
+
+# Python environment and generated files
+backend/.venv/
+backend/__pycache__/
+backend/**/*.pyc
+
+# Local data, uploads, and credentials
+backend/data/
+backend/uploads/
+backend/.env
+frontend/.env
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
