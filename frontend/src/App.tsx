@@ -22,7 +22,7 @@ export function App() {
   const dispatch = useDispatch();
   const { status, draft } = useSelector((state: RootState) => state.complaint);
 
-  const fieldMappings: Record<keyof ComplaintDraft, string> = {
+  const fieldMappings: Partial<Record<keyof ComplaintDraft, string>> = {
     complaintSource: "Complaint Source",
     customerName: "Customer Name",
     productName: "Product Name",
@@ -31,8 +31,6 @@ export function App() {
     affectedQuantity: "Affected Quantity",
     manufacturingDate: "Manufacturing Date",
     expiryDate: "Expiry Date",
-    originatingSiteBlock: "Originating Site Block",
-    impactedMaterials: "Impacted Non-Product Materials",
     complaintCategory: "Complaint Category",
     complaintDescription: "Complaint Description",
     severity: "Severity (Suggested)",
@@ -187,9 +185,7 @@ export function App() {
           <Field label="Batch / Lot Number" field="batchNumber" /><Field label="Affected Quantity" field="affectedQuantity" />
           <Field label="Manufacturing Date" field="manufacturingDate" /><Field label="Expiry Date" field="expiryDate" />
         </div>
-        <h2>3. Facility &amp; Material Impact</h2>
-        <div className="form-grid"><Field label="Originating Site Block" field="originatingSiteBlock" /><Field label="Impacted Non-Product Materials" field="impactedMaterials" /></div>
-        <h2>4. Defect Analysis</h2>
+        <h2>3. Defect Analysis</h2>
         <div className="form-grid"><Field label="Complaint Category" field="complaintCategory" /><Field label="Complaint Description" field="complaintDescription" multiline /></div>
 
         <section className="risk-card">
