@@ -48,9 +48,11 @@ export function App() {
     (key) => !(draft[key as keyof ComplaintDraft] || "").trim()
   ) as Array<keyof ComplaintDraft>;
 
-  const filledFields = Object.keys(fieldMappings).filter(
-    (key) => (draft[key as keyof ComplaintDraft] || "").trim()
-  ) as Array<keyof ComplaintDraft>;
+  const getProgressBarColor = (pct: number) => {
+    if (pct < 40) return "linear-gradient(90deg, #ef4444 0%, #f97316 100%)";
+    if (pct < 80) return "linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)";
+    return "linear-gradient(90deg, #10b981 0%, #059669 100%)";
+  };
 
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -138,10 +140,12 @@ export function App() {
         <section className="completion-widget">
           <div className="completion-header">
             <span className="completion-title">Form Completion Tracker</span>
-            <span className="completion-badge">{percentage}% Completed</span>
+            <span className="completion-badge" style={{ color: percentage < 40 ? "#ef4444" : percentage < 80 ? "#b45309" : "#15803d", background: percentage < 40 ? "#fee2e2" : percentage < 80 ? "#fef3c7" : "#dcfce7" }}>
+              {percentage}% Completed
+            </span>
           </div>
           <div className="completion-progress-track">
-            <div className="completion-progress-bar" style={{ width: `${percentage}%` }}></div>
+            <div className="completion-progress-bar" style={{ width: `${percentage}%`, background: getProgressBarColor(percentage) }}></div>
           </div>
           <div className="completion-details">
             <div className="field-status-column">
@@ -153,20 +157,6 @@ export function App() {
                   missingFields.map((key) => (
                     <span key={key} className="field-badge-missing">
                       {fieldMappings[key]}
-                    </span>
-                  ))
-                )}
-              </div>
-            </div>
-            <div className="field-status-column">
-              <h3>Entered Fields ({filledFields.length})</h3>
-              <div className="field-badges">
-                {filledFields.length === 0 ? (
-                  <span className="no-fields-note">Awaiting inputs...</span>
-                ) : (
-                  filledFields.map((key) => (
-                    <span key={key} className="field-badge-filled">
-                      ✓ {fieldMappings[key]}
                     </span>
                   ))
                 )}
