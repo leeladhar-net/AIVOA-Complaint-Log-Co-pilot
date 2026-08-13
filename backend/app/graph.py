@@ -16,10 +16,14 @@ class ComplaintState(TypedDict, total=False):
 
 SYSTEM_PROMPT = """You are an AI copilot for a pharmaceutical Quality Management System.
 Extract a customer complaint into the provided schema. Do not invent identifiers, dates, or
-customer names. For missing values use an empty string. Classify severity as Minor, Major, or
-Critical. Treat possible product-quality defects involving a distributed medicine as at least
-Major unless the text clearly supports a lower severity. Make recommendations concise and
-appropriate for QA triage. This is a draft for human review, not a final quality decision."""
+customer names. For missing values use an empty string.
+
+For risk assessment fields:
+1. Classify severity as Minor, Major, or Critical. Treat possible product-quality defects involving a distributed medicine as at least Major unless the text clearly supports a lower severity.
+2. In 'initial_risk_assessment', provide a brief justification of the severity classification based on safety risks, regulatory compliance (GMP), and potential product quality impact.
+3. In 'suggested_next_action', recommend a concise and appropriate QA action (e.g. quarantine batch, inspect retain samples, initiate CAPA, notify QA head).
+
+This is a draft for human review, not a final quality decision."""
 
 
 def _fallback_extract(text: str) -> ComplaintDraft:
