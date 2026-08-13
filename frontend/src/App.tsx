@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { populateDraft, setStatus, updateField } from "./features/complaints/complaintSlice";
+import { populateDraft, setStatus, updateField, resetDraft } from "./features/complaints/complaintSlice";
 import { analyzeComplaint as requestAnalysis, askCopilot, extractDocumentText, saveComplaint } from "./api/complaints";
 import type { ChatMessage, ComplaintDraft } from "./types";
 import type { RootState } from "./store";
@@ -8,17 +8,13 @@ import type { RootState } from "./store";
 const sampleComplaint = `Apollo Pharmacy reported 12 discolored capsules in Amoxicillin Capsules 500 mg. Batch number AMX240602. Manufacturing date March 2026. Expiry date February 2028. Please log this complaint and arrange an investigation.`;
 
 function Field({ label, field, multiline = false }: { label: string; field: keyof ComplaintDraft; multiline?: boolean }) {
-  const dispatch = useDispatch();
   const value = useSelector((state: RootState) => state.complaint.draft[field]);
-  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    dispatch(updateField({ field, value: event.target.value }));
-  };
 
   return <label className={multiline ? "field field-wide" : "field"}>
     <span>{label}</span>
     {multiline
-      ? <textarea value={value} onChange={handleChange} rows={4} placeholder="Awaiting AI extraction..." />
-      : <input value={value} onChange={handleChange} placeholder="Awaiting AI extraction..." />}
+      ? <textarea value={value} disabled rows={4} placeholder="Awaiting AI extraction..." />
+      : <input value={value} disabled placeholder="Awaiting AI extraction..." />}
   </label>;
 }
 
@@ -109,6 +105,14 @@ export function App() {
     } finally { setIsSaving(false); }
   };
 
+  const resetForm = () => {
+    dispatch(resetDraft());
+    setMessages([
+      { id: "welcome", role: "assistant", content: "Ready to process a new complaint. Paste a customer email or upload a complaint PDF, and I will extract the data and run an initial risk assessment." }
+    ]);
+    setPrompt("");
+  };
+
   const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -193,7 +197,36 @@ export function App() {
           <div className="form-grid"><Field label="Severity (Suggested)" field="severity" /><Field label="Suggested Next Action" field="suggestedNextAction" /></div>
           <Field label="Initial Risk Assessment" field="initialRiskAssessment" multiline />
         </section>
-        <button className="commit-button" type="button" disabled={status !== "Ready to Commit" || isSaving} onClick={commitComplaint}>{isSaving ? "Saving…" : "Commit to QMS Ledger"}</button>
+        <div className="form-actions-row" style={{ display: "flex", gap: "16px", marginTop: "32px" }}>
+          <button
+            type="button"
+            className="revert-button"
+            disabled={status === "Pending Triage" || isSaving}
+            onClick={resetForm}
+            style={{
+              flex: 1,
+              border: "1px solid #e2e8f0",
+              background: status === "Pending Triage" ? "#f8fafc" : "#ffffff",
+              color: status === "Pending Triage" ? "#94a3b8" : "#475569",
+              borderRadius: "8px",
+              padding: "15px 20px",
+              fontSize: "16px",
+              fontWeight: 700,
+              cursor: status === "Pending Triage" ? "not-allowed" : "pointer"
+            }}
+          >
+            Revert / Reset Form
+          </button>
+          <button
+            className="commit-button"
+            type="button"
+            disabled={status !== "Ready to Commit" || isSaving}
+            onClick={commitComplaint}
+            style={{ flex: 2, marginTop: 0 }}
+          >
+            {isSaving ? "Saving…" : "Commit to QMS Ledger"}
+          </button>
+        </div>
       </form>
     </section>
 
@@ -204,8 +237,15 @@ export function App() {
         <label className="upload-control">📎 <input type="file" accept=".pdf,.txt" onChange={handleFile} /> Attach PDF or text file</label>
         <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Type or paste a complaint. Leave blank to run the included demo complaint." rows={4} />
         <div className="composer-actions">
-          <button className="secondary-button" disabled={isAnalyzing || !prompt.trim()} onClick={askQuestion}>Ask Copilot</button>
-          <button disabled={isAnalyzing} onClick={analyzeComplaint}>{isAnalyzing ? "Working…" : "Analyze complaint"}</button>
+          {status === "Ready to Commit" ? (
+            <button disabled={isAnalyzing || !prompt.trim()} onClick={askQuestion}>
+              {isAnalyzing ? "Updating…" : "Update complaint"}
+            </button>
+          ) : (
+            <button disabled={isAnalyzing} onClick={analyzeComplaint}>
+              {isAnalyzing ? "Working…" : "Analyze complaint"}
+            </button>
+          )}
         </div>
       </div>
       <small>Powered by LangGraph (backend connection pending)</small>

@@ -32,9 +32,13 @@ const complaintSlice = createSlice({
     },
     setStatus: (state, action: PayloadAction<ComplaintStatus>) => {
       state.status = action.payload;
+    },
+    resetDraft: (state) => {
+      state.draft = initialDraft;
+      state.status = "Pending Triage";
     }
   }
 });
 
-export const { updateField, populateDraft, setStatus } = complaintSlice.actions;
+export const { updateField, populateDraft, setStatus, resetDraft } = complaintSlice.actions;
 export default complaintSlice.reducer;
