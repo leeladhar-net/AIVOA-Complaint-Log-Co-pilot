@@ -20,3 +20,97 @@ input:focus, textarea:focus { outline: 2px solid #c4b5fd; border-color: #7c3aed;
 .composer { padding: 22px 34px; border-top: 1px solid #e8eaf0; display: grid; gap: 12px; background: white; }.upload-control { color: #5137e8; font-size: 14px; font-weight: 600; cursor: pointer; }.upload-control input { display: none; }.composer-actions { display: flex; gap: 10px; justify-content: flex-end; }.secondary-button { background: #ede9fe !important; color: #5137e8 !important; }.copilot-panel small { text-align: center; padding: 0 0 22px; color: #8a94a6; }
 @media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; }.copilot-panel { min-height: 520px; border-left: 0; border-top: 1px solid #e8eaf0; }.complaint-panel { padding: 28px 22px; } }
 @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; }.field-wide { grid-column: span 1; }.page-header { gap: 16px; flex-direction: column; } }
+
+/* Completion Widget Styles */
+.completion-widget {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+.completion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.completion-title {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 15px;
+}
+.completion-badge {
+  font-weight: 700;
+  font-size: 14px;
+  color: #5137e8;
+  background: #ede9fe;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.completion-progress-track {
+  width: 100%;
+  height: 10px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.completion-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #5137e8 0%, #7c3aed 50%, #3b82f6 100%);
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.completion-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 16px;
+}
+.field-status-column h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 0 0 10px 0;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.field-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.field-badge-missing {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.field-badge-filled {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.no-fields-note {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+}
+@media (max-width: 600px) {
+  .completion-details {
+    grid-template-columns: 1fr;
+  }
+}

@@ -25,6 +25,39 @@ function Field({ label, field, multiline = false }: { label: string; field: keyo
 export function App() {
   const dispatch = useDispatch();
   const { status, draft } = useSelector((state: RootState) => state.complaint);
+
+  const fieldMappings: Record<keyof ComplaintDraft, string> = {
+    complaintSource: "Complaint Source",
+    customerName: "Customer Name",
+    productName: "Product Name",
+    productStrength: "Product Strength",
+    batchNumber: "Batch / Lot Number",
+    affectedQuantity: "Affected Quantity",
+    manufacturingDate: "Manufacturing Date",
+    expiryDate: "Expiry Date",
+    originatingSiteBlock: "Originating Site Block",
+    impactedMaterials: "Impacted Non-Product Materials",
+    complaintCategory: "Complaint Category",
+    complaintDescription: "Complaint Description",
+    severity: "Severity (Suggested)",
+    suggestedNextAction: "Suggested Next Action",
+    initialRiskAssessment: "Initial Risk Assessment"
+  };
+
+  const totalFields = Object.keys(fieldMappings).length;
+  const enteredFields = Object.keys(fieldMappings).filter(
+    (key) => (draft[key as keyof ComplaintDraft] || "").trim() !== ""
+  ).length;
+  const percentage = Math.round((enteredFields / totalFields) * 100);
+
+  const missingFields = Object.keys(fieldMappings).filter(
+    (key) => !(draft[key as keyof ComplaintDraft] || "").trim()
+  ) as Array<keyof ComplaintDraft>;
+
+  const filledFields = Object.keys(fieldMappings).filter(
+    (key) => (draft[key as keyof ComplaintDraft] || "").trim()
+  ) as Array<keyof ComplaintDraft>;
+
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: "welcome", role: "assistant", content: "Ready to process a new complaint. Paste a customer email or upload a complaint PDF, and I will extract the data and run an initial risk assessment." }
@@ -98,6 +131,46 @@ export function App() {
         </div>
         <span className={`status status-${status.toLowerCase().replace(/\s+/g, "-")}`}>{status}</span>
       </header>
+
+      <section className="completion-widget">
+        <div className="completion-header">
+          <span className="completion-title">Form Completion Tracker</span>
+          <span className="completion-badge">{percentage}% Completed</span>
+        </div>
+        <div className="completion-progress-track">
+          <div className="completion-progress-bar" style={{ width: `${percentage}%` }}></div>
+        </div>
+        <div className="completion-details">
+          <div className="field-status-column">
+            <h3>Missing Fields ({missingFields.length})</h3>
+            <div className="field-badges">
+              {missingFields.length === 0 ? (
+                <span className="no-fields-note">All fields completed! Ready to commit.</span>
+              ) : (
+                missingFields.map((key) => (
+                  <span key={key} className="field-badge-missing">
+                    {fieldMappings[key]}
+                  </span>
+                ))
+              )}
+            </div>
+          </div>
+          <div className="field-status-column">
+            <h3>Entered Fields ({filledFields.length})</h3>
+            <div className="field-badges">
+              {filledFields.length === 0 ? (
+                <span className="no-fields-note">Awaiting inputs...</span>
+              ) : (
+                filledFields.map((key) => (
+                  <span key={key} className="field-badge-filled">
+                    ✓ {fieldMappings[key]}
+                  </span>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <form onSubmit={(event) => event.preventDefault()}>
         <h2>1. Origin &amp; Customer Details</h2>
