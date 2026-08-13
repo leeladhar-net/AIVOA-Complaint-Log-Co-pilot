@@ -1,0 +1,11 @@
+.git
+.gitignore
+backend/.venv
+backend/__pycache__
+backend/**/*.pyc
+backend/data
+frontend/node_modules
+frontend/dist
+.DS_Store
+Thumbs.db
+.vscode/

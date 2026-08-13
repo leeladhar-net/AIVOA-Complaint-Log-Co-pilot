@@ -4,6 +4,8 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pypdf import PdfReader
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -71,3 +73,20 @@ def create_complaint(payload: ComplaintCreate, db: Session = Depends(get_db)):
 @app.get("/api/complaints", response_model=list[ComplaintResponse])
 def list_complaints(db: Session = Depends(get_db)):
     return list(db.scalars(select(Complaint).order_by(Complaint.created_at.desc())))
+
+
+# Serve frontend static assets from ../frontend/dist if it exists
+frontend_dist_path = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+if frontend_dist_path.exists():
+    app.mount("/assets", StaticFiles(directory=frontend_dist_path / "assets"), name="assets")
+
+    @app.get("/{fallback_path:path}")
+    def serve_frontend(fallback_path: str):
+        # Allow API routes to be handled properly (in case they fall through, but they shouldn't since they are matched first)
+        if fallback_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API route not found")
+        # Serve index.html for all other routes to support React SPA routing
+        index_file = frontend_dist_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file)
+        raise HTTPException(status_code=404, detail="Index file not found")
