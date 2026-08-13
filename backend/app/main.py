@@ -80,7 +80,7 @@ frontend_dist_path = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 if frontend_dist_path.exists():
     app.mount("/assets", StaticFiles(directory=frontend_dist_path / "assets"), name="assets")
 
-    @app.get("/{fallback_path:path}")
+    @app.api_route("/{fallback_path:path}", methods=["GET", "HEAD"])
     def serve_frontend(fallback_path: str):
         # Allow API routes to be handled properly (in case they fall through, but they shouldn't since they are matched first)
         if fallback_path.startswith("api/"):
