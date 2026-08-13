@@ -1,6 +1,6 @@
 import type { ComplaintDraft } from "../types";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL ?? "/api";
 
 type ApiDraft = {
   complaint_source: string; customer_name: string; product_name: string; product_strength: string;
