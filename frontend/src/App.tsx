@@ -139,7 +139,7 @@ export function App() {
       {status === "Ready to Commit" && (
         <section className="completion-widget">
           <div className="completion-header">
-            <span className="completion-title">Form Completion Tracker</span>
+            <span className="completion-title">Status</span>
             <span className="completion-badge" style={{ color: percentage < 40 ? "#ef4444" : percentage < 80 ? "#b45309" : "#15803d", background: percentage < 40 ? "#fee2e2" : percentage < 80 ? "#fef3c7" : "#dcfce7" }}>
               {percentage}% Completed
             </span>
