@@ -132,45 +132,47 @@ export function App() {
         <span className={`status status-${status.toLowerCase().replace(/\s+/g, "-")}`}>{status}</span>
       </header>
 
-      <section className="completion-widget">
-        <div className="completion-header">
-          <span className="completion-title">Form Completion Tracker</span>
-          <span className="completion-badge">{percentage}% Completed</span>
-        </div>
-        <div className="completion-progress-track">
-          <div className="completion-progress-bar" style={{ width: `${percentage}%` }}></div>
-        </div>
-        <div className="completion-details">
-          <div className="field-status-column">
-            <h3>Missing Fields ({missingFields.length})</h3>
-            <div className="field-badges">
-              {missingFields.length === 0 ? (
-                <span className="no-fields-note">All fields completed! Ready to commit.</span>
-              ) : (
-                missingFields.map((key) => (
-                  <span key={key} className="field-badge-missing">
-                    {fieldMappings[key]}
-                  </span>
-                ))
-              )}
+      {status === "Ready to Commit" && (
+        <section className="completion-widget">
+          <div className="completion-header">
+            <span className="completion-title">Form Completion Tracker</span>
+            <span className="completion-badge">{percentage}% Completed</span>
+          </div>
+          <div className="completion-progress-track">
+            <div className="completion-progress-bar" style={{ width: `${percentage}%` }}></div>
+          </div>
+          <div className="completion-details">
+            <div className="field-status-column">
+              <h3>Missing Fields ({missingFields.length})</h3>
+              <div className="field-badges">
+                {missingFields.length === 0 ? (
+                  <span className="no-fields-note">All fields completed! Ready to commit.</span>
+                ) : (
+                  missingFields.map((key) => (
+                    <span key={key} className="field-badge-missing">
+                      {fieldMappings[key]}
+                    </span>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="field-status-column">
+              <h3>Entered Fields ({filledFields.length})</h3>
+              <div className="field-badges">
+                {filledFields.length === 0 ? (
+                  <span className="no-fields-note">Awaiting inputs...</span>
+                ) : (
+                  filledFields.map((key) => (
+                    <span key={key} className="field-badge-filled">
+                      ✓ {fieldMappings[key]}
+                    </span>
+                  ))
+                )}
+              </div>
             </div>
           </div>
-          <div className="field-status-column">
-            <h3>Entered Fields ({filledFields.length})</h3>
-            <div className="field-badges">
-              {filledFields.length === 0 ? (
-                <span className="no-fields-note">Awaiting inputs...</span>
-              ) : (
-                filledFields.map((key) => (
-                  <span key={key} className="field-badge-filled">
-                    ✓ {fieldMappings[key]}
-                  </span>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <form onSubmit={(event) => event.preventDefault()}>
         <h2>1. Origin &amp; Customer Details</h2>
